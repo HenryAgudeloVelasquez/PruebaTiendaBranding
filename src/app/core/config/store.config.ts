@@ -4,8 +4,8 @@ export const STORE_CONFIG = {
   motto: 'EQUIPAMIENTO TÁCTICO, MERCHANDISE & IDENTIFICACIÓN DE ALTO RENDIMIENTO',
   supportEmail: 'contacto@mtf-merch.store',
   // Número de WhatsApp para pedidos directos (código de país sin espacios)
-  whatsappNumber: '573009876543',
-  whatsappDisplay: '+57 300 987 6543',
+  whatsappNumber: '573184370785',
+  whatsappDisplay: '+57 318 437 0785',
   currencyCode: 'COP',
   currencySymbol: '$',
   socialLinks: {
