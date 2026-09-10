@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Product } from '../../core/models/product.model';
 import { WhatsAppService } from '../../core/services/whatsapp.service';
 import { InquiryService } from '../../core/services/inquiry.service';
+import { FUNNEL_CAMPAIGNS } from '../../core/mock-data/funnel-campaigns.data';
 
 @Component({
   selector: 'app-product-card',
@@ -72,13 +73,31 @@ import { InquiryService } from '../../core/services/inquiry.service';
           }
         </div>
 
+        <!-- Botón de Oferta / Embudo WhatsApp de Alta Conversión -->
+        <div class="card-offer-row">
+          <a 
+            [routerLink]="['/oferta', getOfferCampaignId()]"
+            class="btn-funnel-offer"
+            title="Ver oferta especial en embudo dinámico de WhatsApp"
+          >
+            <span class="btn-offer-content">
+              <span class="offer-flash-icon">⚡</span>
+              <span class="offer-text">Ver Oferta Flash</span>
+              @if (getDiscountPercent() > 0) {
+                <span class="offer-discount-tag">-{{ getDiscountPercent() }}%</span>
+              }
+            </span>
+            <span class="offer-arrow">→</span>
+          </a>
+        </div>
+
         <!-- Acciones: Branding Page y Quick WhatsApp -->
         <div class="card-actions">
           <a 
             [routerLink]="['/brand', product().slug]" 
             class="btn btn-secondary flex-1 btn-branding"
           >
-            Branding Page
+            Ficha Táctica
           </a>
 
           <!-- Botón de Compra Directa Rápida a WhatsApp -->
@@ -342,11 +361,59 @@ import { InquiryService } from '../../core/services/inquiry.service';
       flex-shrink: 0;
       transition: all var(--transition-fast);
     }
-    .btn-add-bag:hover {
-      background: rgba(0, 242, 254, 0.15);
-      border-color: var(--color-cyan);
-      color: var(--color-cyan);
+    .card-offer-row {
+      margin-bottom: 0.75rem;
+    }
+    .btn-funnel-offer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      border: 1px solid #f59e0b;
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+      cursor: pointer;
+    }
+    .btn-funnel-offer:hover {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.5);
+      color: #ffffff;
+    }
+    .btn-offer-content {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .offer-flash-icon {
+      font-size: 0.9rem;
+    }
+    .offer-text {
+      letter-spacing: 0.02em;
+    }
+    .offer-discount-tag {
+      background: #22c55e;
+      color: #052e16;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      margin-left: 0.25rem;
+    }
+    .offer-arrow {
+      font-size: 0.95rem;
+      font-weight: 800;
+      transition: transform var(--transition-fast);
+    }
+    .btn-funnel-offer:hover .offer-arrow {
+      transform: translateX(3px);
     }
   `]
 })
@@ -355,6 +422,27 @@ export class ProductCardComponent {
   
   private whatsappService = inject(WhatsAppService);
   private inquiryService = inject(InquiryService);
+
+  getOfferCampaignId(): string {
+    const p = this.product();
+    const campaign = FUNNEL_CAMPAIGNS.find(c => c.productId === p.id && c.isActive);
+    if (campaign) {
+      return campaign.campaignId;
+    }
+    return p.slug;
+  }
+
+  getDiscountPercent(): number {
+    const p = this.product();
+    const campaign = FUNNEL_CAMPAIGNS.find(c => c.productId === p.id && c.isActive);
+    if (campaign && campaign.discountPrice && campaign.price > campaign.discountPrice) {
+      return Math.round(((campaign.price - campaign.discountPrice) / campaign.price) * 100);
+    }
+    if (p.originalPrice && p.originalPrice > p.price) {
+      return Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
+    }
+    return 0;
+  }
 
   formatPrice(val?: number): string {
     if (!val) return '';

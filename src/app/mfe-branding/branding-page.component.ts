@@ -9,6 +9,7 @@ import { Product } from '../core/models/product.model';
 import { WhatsAppButtonComponent } from '../shared/components/whatsapp-button/whatsapp-button.component';
 import { QrModalComponent } from '../shared/components/qr-modal/qr-modal.component';
 import { CustomizerPreviewComponent } from './customizer-preview/customizer-preview.component';
+import { FUNNEL_CAMPAIGNS } from '../core/mock-data/funnel-campaigns.data';
 
 @Component({
   selector: 'app-branding-page',
@@ -225,6 +226,12 @@ import { CustomizerPreviewComponent } from './customizer-preview/customizer-prev
                     Sumar a Bolsa
                   </button>
                 </div>
+
+                <!-- Botón Directo al Embudo de Oferta Flash -->
+                <a [routerLink]="['/oferta', getOfferCampaignId(prod)]" class="btn-funnel-link-branding">
+                  <span class="funnel-link-icon">⚡</span>
+                  <span class="funnel-link-text">Ver Oferta Flash & Descuento Especial en Embudo WhatsApp →</span>
+                </a>
               </div>
             </div>
           </div>
@@ -694,6 +701,35 @@ import { CustomizerPreviewComponent } from './customizer-preview/customizer-prev
     .flex-1 {
       flex: 1;
     }
+    .btn-funnel-link-branding {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.25), rgba(180, 83, 9, 0.45));
+      border: 1px solid #f59e0b;
+      color: #fef08a;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);
+      margin-top: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .btn-funnel-link-branding:hover {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+    }
+    .funnel-link-icon {
+      font-size: 0.95rem;
+    }
     .specs-section {
       padding: 2.5rem;
       border-radius: 16px;
@@ -894,5 +930,13 @@ export class BrandingPageComponent implements OnInit {
 
   formatMoney(val: number): string {
     return this.productService.formatCurrency(val);
+  }
+
+  getOfferCampaignId(prod: Product): string {
+    const campaign = FUNNEL_CAMPAIGNS.find(c => c.productId === prod.id && c.isActive);
+    if (campaign) {
+      return campaign.campaignId;
+    }
+    return prod.slug;
   }
 }
