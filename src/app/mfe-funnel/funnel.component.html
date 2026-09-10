@@ -1,0 +1,281 @@
+<!-- Estado de Carga -->
+@if (isLoading()) {
+  <div class="funnel-loading-screen">
+    <div class="spinner-tactical"></div>
+    <p class="loading-title">CARGANDO OFERTA DE CAMPAÑA...</p>
+    <p class="loading-sub">Conectando con la pasarela de despacho prioritario MTF</p>
+  </div>
+}
+
+<!-- Estado: Campaña no encontrada o expirada -->
+@else if (notFound() || !campaign()) {
+  <div class="funnel-error-screen container">
+    <div class="error-badge">CAMPAÑA NO DISPONIBLE</div>
+    <h1 class="error-title">Esta oferta especial ya no se encuentra activa</h1>
+    <p class="error-desc">
+      El cupo para este drop táctico se ha completado o la promoción ha expirado.
+      Puedes explorar todo nuestro equipamiento en el catálogo principal.
+    </p>
+    <a routerLink="/" class="btn btn-primary btn-error-cta">
+      🛡️ Ver Catálogo Completo de Productos
+    </a>
+  </div>
+}
+
+<!-- Vista Principal del Embudo de Alta Conversión -->
+@else if (campaign(); as data) {
+  <div class="funnel-page animate-fade-in">
+
+    <!-- 1. Barra Superior de Urgencia Táctica -->
+    @if (data.urgency?.enabled) {
+      <div class="urgency-ticker">
+        <div class="container ticker-flex">
+          <div class="ticker-left">
+            <span class="ticker-dot pulse"></span>
+            <span class="ticker-text">{{ data.urgency?.bannerText }}</span>
+          </div>
+          <div class="ticker-right">
+            <span class="ticker-timer-label">TERMINA EN:</span>
+            <span class="timer-digits">
+              {{ padZero(timerMinutes()) }}:{{ padZero(timerSeconds()) }}
+            </span>
+            @if (data.urgency?.stockLeft) {
+              <span class="stock-badge">
+                ¡Solo quedan {{ data.urgency?.stockLeft }} unid.!
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- 2. Header Táctico Minimalista (Cero Fugas / Cero Distracciones) -->
+    <header class="funnel-header">
+      <div class="container header-content">
+        <div class="header-brand">
+          <span class="brand-shield">🛡️</span>
+          <span class="brand-name">MTF MERCHANDISE</span>
+          <span class="brand-sub">// DESPACHO OFICIAL</span>
+        </div>
+        <div class="header-status">
+          <span class="status-indicator"></span>
+          <span class="status-label">LÍNEA DIRECTA DE VENTAS ACTIVA</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 3. Contenedor Central del Embudo -->
+    <main class="funnel-main container">
+      
+      <div class="funnel-grid">
+
+        <!-- Columna Izquierda: Imagen y Prueba Social -->
+        <div class="funnel-media-col">
+          <div class="product-spotlight glass-panel">
+            <img 
+              [src]="selectedImage()" 
+              [alt]="data.title" 
+              class="spotlight-img"
+            />
+            
+            @if (data.badge) {
+              <div class="campaign-badge">{{ data.badge }}</div>
+            }
+
+            @if (discountPercentage() > 0) {
+              <div class="discount-ribbon">
+                -{{ discountPercentage() }}% OFF
+              </div>
+            }
+          </div>
+
+          <!-- Miniaturas si tiene galería -->
+          @if (data.galleryImages && data.galleryImages.length > 1) {
+            <div class="gallery-thumbs">
+              @for (img of data.galleryImages; track img) {
+                <button 
+                  type="button" 
+                  (click)="selectThumbnail(img)"
+                  [class.active]="selectedImage() === img"
+                  class="thumb-btn"
+                >
+                  <img [src]="img" [alt]="data.title" />
+                </button>
+              }
+            </div>
+          }
+
+          <!-- Testimonio / Prueba Social Destacada -->
+          @if (data.socialProof?.highlightReview; as rev) {
+            <div class="review-box glass-panel">
+              <div class="review-header">
+                <div class="stars">★★★★★</div>
+                <span class="verified-tag">✓ Comprador Verificado</span>
+              </div>
+              <p class="review-text">"{{ rev.comment }}"</p>
+              <span class="review-author">— {{ rev.author }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Columna Derecha: Oferta, Beneficios y Botón de WhatsApp -->
+        <div class="funnel-action-col">
+
+          <div class="headline-block">
+            <div class="sub-origin-tag">
+              <span class="sku-pill">REF ID: {{ data.campaignId.toUpperCase() }}</span>
+              <span class="dispatch-pill">DESPACHO PRIORITARIO</span>
+            </div>
+            <h1 class="campaign-title">{{ data.title }}</h1>
+            <p class="campaign-subtitle">{{ data.subtitle }}</p>
+          </div>
+
+          <!-- Calificación y prueba social rápida -->
+          @if (data.socialProof) {
+            <div class="social-stats">
+              <div class="rating-stars">
+                <span class="star-icon">★</span>
+                <span class="rating-number">{{ data.socialProof.rating.toFixed(1) }}</span>
+                <span class="reviews-count">({{ data.socialProof.reviewsCount }} valoraciones verificadas)</span>
+              </div>
+              <span class="separator">|</span>
+              <span class="recent-orders">
+                🔥 {{ data.socialProof.recentOrdersCount }} pedidos despachados hoy
+              </span>
+            </div>
+          }
+
+          <!-- Bloque de Precios con Descuento Explosivo -->
+          <div class="pricing-card glass-panel">
+            <div class="pricing-header">
+              <span class="pricing-headline">PRECIO EXCLUSIVO DE CAMPAÑA</span>
+              @if (data.discountPrice) {
+                <span class="saving-tag">
+                  Ahorras {{ formatMoney(data.price - data.discountPrice) }} COP
+                </span>
+              }
+            </div>
+
+            <div class="price-row">
+              <div class="current-price">
+                <span class="currency-symbol">$</span>
+                <span class="amount">{{ formatMoney(data.discountPrice || data.price) }}</span>
+                <span class="currency-iso">{{ data.currency || 'COP' }}</span>
+              </div>
+
+              @if (data.discountPrice) {
+                <div class="original-price-wrap">
+                  <span class="strikethrough-label">Precio Habitual:</span>
+                  <span class="strikethrough-price">{{ formatMoney(data.price) }} COP</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Selector Rápido de Opciones (Talla / Acabado) -->
+          @if (data.variantOption; as variant) {
+            <div class="variant-picker">
+              <label class="variant-label">
+                {{ variant.label }}: <strong>{{ selectedVariant() }}</strong>
+              </label>
+              <div class="variant-buttons">
+                @for (val of variant.values; track val) {
+                  <button 
+                    type="button" 
+                    (click)="selectVariant(val)"
+                    [class.selected]="selectedVariant() === val"
+                    class="variant-btn"
+                  >
+                    {{ val }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Llamado a la Acción Primario (WhatsApp Direct CTA) -->
+          <div class="cta-container">
+            <a 
+              [href]="whatsappUrl()" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              (click)="onWhatsappClick()"
+              class="funnel-whatsapp-cta pulse-cta"
+            >
+              <span class="wa-symbol">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                </svg>
+              </span>
+              <span class="cta-label-wrap">
+                <span class="cta-primary-title">¡PEDIR OFERTA POR WHATSAPP!</span>
+                <span class="cta-subtitle">Atención inmediata con asesor militar asignado</span>
+              </span>
+              <span class="cta-arrow">→</span>
+            </a>
+
+            <div class="cta-trust-row">
+              <span class="trust-item">🔒 Chat Seguro Cifrado</span>
+              <span class="trust-item">⚡ Respuesta en < 5 min</span>
+              <span class="trust-item">🇨🇴 Envíos Nacionales</span>
+            </div>
+          </div>
+
+          <!-- Beneficios Clave del Producto -->
+          @if (data.bulletPoints && data.bulletPoints.length > 0) {
+            <div class="benefits-card glass-panel">
+              <h3 class="benefits-title">¿QUÉ INCLUYE ESTA EDICIÓN TÁCTICA?</h3>
+              <ul class="benefits-list">
+                @for (bullet of data.bulletPoints; track bullet) {
+                  <li>
+                    <span class="check-icon">✓</span>
+                    <span>{{ bullet }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+          <!-- Garantías y Despacho -->
+          <div class="guarantees-grid">
+            <div class="guarantee-card">
+              <div class="g-icon">🛡️</div>
+              <div class="g-info">
+                <strong>Garantía Oficial</strong>
+                <p>{{ data.guaranteeText || 'Garantía de satisfacción total por 6 meses.' }}</p>
+              </div>
+            </div>
+            <div class="guarantee-card">
+              <div class="g-icon">📦</div>
+              <div class="g-info">
+                <strong>Despacho Directo</strong>
+                <p>{{ data.shippingNote || 'Envíos a toda Colombia con rastreo en vivo.' }}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- 4. Barra Fija Inferior para Móviles (Sticky Mobile Bar) -->
+    <div class="mobile-sticky-bar">
+      <div class="mobile-bar-info">
+        <span class="mobile-price">{{ formatMoney(data.discountPrice || data.price) }} COP</span>
+        <span class="mobile-offer-tag">OFERTA ACTIVA</span>
+      </div>
+      <a 
+        [href]="whatsappUrl()" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        (click)="onWhatsappClick()"
+        class="mobile-btn-wa"
+      >
+        ¡Pedir por WhatsApp!
+      </a>
+    </div>
+
+  </div>
+}

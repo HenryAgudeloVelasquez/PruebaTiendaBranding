@@ -54,6 +54,9 @@ import { WhatsAppService } from '../../core/services/whatsapp.service';
           <a routerLink="/" (click)="selectCat('drinkware')" class="nav-item" [class.active]="isCatActive('drinkware')">
             Vasos & Termos
           </a>
+          <a routerLink="/oferta/blackout-operator" class="nav-item drop-highlight" title="Ver Drop Táctico / Embudo de Campaña">
+            ⚡ Drops & Ofertas
+          </a>
         </nav>
 
         <!-- Acciones: Botón de Bolsa de Cotización & Soporte WhatsApp -->
@@ -192,6 +195,16 @@ import { WhatsAppService } from '../../core/services/whatsapp.service';
       color: var(--color-cyan);
       background: rgba(0, 242, 254, 0.1);
       font-weight: 600;
+    }
+    .nav-item.drop-highlight {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-weight: 700;
+    }
+    .nav-item.drop-highlight:hover {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fef3c7;
     }
     .header-actions {
       display: flex;

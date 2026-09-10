@@ -1,0 +1,847 @@
+/* ═════════════════════════════════════════════════════════════════════
+   ESTILOS DE EMBUDO DE ALTA CONVERSIÓN // MTF FUNNEL SYSTEM
+   ═════════════════════════════════════════════════════════════════════ */
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #0b0f19;
+  color: #f3f4f6;
+  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+/* --- Estados de Carga y Error --- */
+.funnel-loading-screen {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.spinner-tactical {
+  width: 52px;
+  height: 52px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #22c55e;
+  border-right-color: #38bdf8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #e2e8f0;
+}
+
+.loading-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.funnel-error-screen {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+}
+
+.error-badge {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.error-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.error-desc {
+  max-width: 520px;
+  color: #94a3b8;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.btn-error-cta {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid #334155;
+  color: #fff;
+  padding: 0.85rem 1.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-error-cta:hover {
+  background: #334155;
+  transform: translateY(-2px);
+}
+
+/* --- 1. Barra de Urgencia Superior --- */
+.urgency-ticker {
+  background: linear-gradient(90deg, #78350f, #b45309, #d97706);
+  color: #ffffff;
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.ticker-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ticker-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ticker-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #fef08a;
+  border-radius: 50%;
+}
+
+.pulse {
+  animation: pulseAnim 1.2s infinite;
+}
+
+@keyframes pulseAnim {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(254, 240, 138, 0.7); }
+  70% { transform: scale(1.2); box-shadow: 0 0 0 8px rgba(254, 240, 138, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(254, 240, 138, 0); }
+}
+
+.ticker-text {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ticker-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ticker-timer-label {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+.timer-digits {
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  font-size: 0.95rem;
+  color: #fef08a;
+  border: 1px solid rgba(254, 240, 138, 0.4);
+}
+
+.stock-badge {
+  background: #dc2626;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  animation: pulseStock 2s infinite;
+}
+
+@keyframes pulseStock {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* --- 2. Header Táctico Minimalista --- */
+.funnel-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  padding: 0.75rem 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand-shield {
+  font-size: 1.25rem;
+}
+
+.brand-name {
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #f8fafc;
+  font-size: 1.05rem;
+}
+
+.brand-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.status-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #86efac;
+  letter-spacing: 0.08em;
+}
+
+/* --- 3. Grid Principal del Embudo --- */
+.funnel-main {
+  padding-top: 2.5rem;
+  padding-bottom: 6rem; /* espacio para la sticky bar en mobile */
+}
+
+.funnel-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 992px) {
+  .funnel-grid {
+    grid-template-columns: 1.05fr 1.2fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+
+/* --- Columna Izquierda: Spotlight & Medios --- */
+.product-spotlight {
+  position: relative;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.spotlight-img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.campaign-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
+}
+
+.discount-ribbon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #22c55e;
+  color: #052e16;
+  font-weight: 900;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+}
+
+.gallery-thumbs {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.thumb-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: rgba(30, 41, 59, 0.6);
+  padding: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.thumb-btn.active {
+  border-color: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+.review-box {
+  margin-top: 1.5rem;
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.stars {
+  color: #fbbf24;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+.verified-tag {
+  color: #4ade80;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.review-text {
+  font-style: italic;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.review-author {
+  display: block;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* --- Columna Derecha: Contenido y CTA --- */
+.headline-block {
+  margin-bottom: 1rem;
+}
+
+.sub-origin-tag {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sku-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.dispatch-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.campaign-title {
+  font-size: 1.85rem;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .campaign-title {
+    font-size: 2.25rem;
+  }
+}
+
+.campaign-subtitle {
+  font-size: 1rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* Estadísticas sociales */
+.social-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #fbbf24;
+}
+
+.star-icon {
+  font-size: 1rem;
+}
+
+.rating-number {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.reviews-count {
+  color: #94a3b8;
+}
+
+.separator {
+  color: #475569;
+}
+
+.recent-orders {
+  color: #f87171;
+  font-weight: 700;
+}
+
+/* Tarjeta de Precios */
+.pricing-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.1);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pricing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pricing-headline {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #4ade80;
+}
+
+.saving-tag {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.current-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.currency-symbol {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #22c55e;
+}
+
+.amount {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.currency-iso {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-left: 0.25rem;
+}
+
+.original-price-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.strikethrough-label {
+  font-size: 0.7rem;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.strikethrough-price {
+  font-size: 1.15rem;
+  color: #64748b;
+  text-decoration: line-through;
+  font-weight: 700;
+}
+
+/* Selector de variantes */
+.variant-picker {
+  margin-bottom: 1.5rem;
+}
+
+.variant-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin-bottom: 0.6rem;
+}
+
+.variant-label strong {
+  color: #ffffff;
+}
+
+.variant-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.variant-btn {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.variant-btn:hover {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.variant-btn.selected {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+/* --- Botón Principal de WhatsApp (Pulsing CTA) --- */
+.cta-container {
+  margin-bottom: 2rem;
+}
+
+.funnel-whatsapp-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  padding: 1.15rem 1.75rem;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.funnel-whatsapp-cta:hover {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 32px rgba(34, 197, 94, 0.6);
+}
+
+.pulse-cta {
+  animation: waPulse 2.8s infinite;
+}
+
+@keyframes waPulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { box-shadow: 0 0 0 16px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+.wa-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.45rem;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+}
+
+.cta-label-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cta-primary-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.cta-subtitle {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.cta-arrow {
+  font-size: 1.5rem;
+  font-weight: 900;
+  transition: transform 0.2s ease;
+}
+
+.funnel-whatsapp-cta:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+.cta-trust-row {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Beneficios */
+.benefits-card {
+  background: rgba(30, 41, 59, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.benefits-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 0.85rem;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Garantías */
+.guarantees-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .guarantees-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guarantee-card {
+  display: flex;
+  gap: 0.75rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.85rem;
+  border-radius: 10px;
+}
+
+.g-icon {
+  font-size: 1.4rem;
+}
+
+.g-info strong {
+  display: block;
+  font-size: 0.8rem;
+  color: #f1f5f9;
+  margin-bottom: 0.2rem;
+}
+
+.g-info p {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* --- 4. Sticky Mobile CTA Bar --- */
+.mobile-sticky-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-sticky-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.75rem 1rem;
+    z-index: 99;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.6);
+  }
+
+  .mobile-bar-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-price {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #22c55e;
+    line-height: 1.1;
+  }
+
+  .mobile-offer-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #38bdf8;
+    letter-spacing: 0.05em;
+  }
+
+  .mobile-btn-wa {
+    background: #22c55e;
+    color: #052e16;
+    font-weight: 900;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.5);
+  }
+}

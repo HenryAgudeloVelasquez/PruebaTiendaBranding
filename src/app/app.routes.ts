@@ -12,6 +12,11 @@ export const routes: Routes = [
     title: 'MTF Merch // Branding Page & Despacho Directo'
   },
   {
+    path: 'oferta',
+    loadChildren: () => import('./mfe-funnel/funnel.routes').then(m => m.FUNNEL_ROUTES),
+    title: 'MTF Merch // Oferta Especial de Campaña Táctica'
+  },
+  {
     path: '**',
     redirectTo: ''
   }
